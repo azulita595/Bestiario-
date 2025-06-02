@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bestiario: La casa del tigre</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
+  body {
+    margin: 0; padding: 0;
+    background-color: #0b0a0f;
+    color: #e1d8d6;
+    font-family: 'Cormorant Garamond', serif;
+    overflow: hidden;
+    user-select: none;
+  }
+  #gameContainer {
+    width: 100vw; height: 100vh;
+    position: relative;
+    background: #0b0a0f url('https://i.ibb.co/5Kjk5K0/black-roses.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #startScreen {
+    text-align: center;
+    opacity: 1;
+    transition: opacity 1s ease;
+  }
+  #startScreen.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #7d6a89;
+  }
+  button {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    background: #4d3b53;
+    color: #e1d8d6;
+    border: none;
+    padding: 1rem 3rem;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 0 8px #a179a3;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #7d6a89;
+  }
+
+  #gameScreen {
+    flex: 1;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    position: relative;
+    display: none;
+    flex-direction: column;
+    background-color: #121016dd;
+    border-radius: 15px;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+
+  #sceneImage {
+    width: 100%;
+    max-height: 50vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 0 12px #7d6a89;
+    margin-bottom: 1rem;
+  }
+
+  #desc {
+    flex: 1;
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    white-space: pre-wrap;
+  }
+
+  #choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .choiceBtn {
+    flex: 1 1 calc(50% - 1rem);
+    background: #4d3b53;
+    color: #e1d8d6;
+    border: none;
+    border-radius: 12px;
+    padding: 0.8rem;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 0 8px #a179a3;
+    transition: background 0.3s ease;
+  }
+  .choiceBtn:hover {
+    background: #7d6a89;
+  }
+
+  #inventory {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #c4b7d4;
+  }
+
+  #topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  #linternaBtn, #musicBtn {
+    background: #4d3b53;
+    color: #e1d8d6;
+    border: none;
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    box-shadow: 0 0 6px #a179a3;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  #linternaBtn.active, #musicBtn.active {
+    background: #7d6a89;
+  }
+  #linternaBtn:hover, #musicBtn:hover {
+    background: #7d6a89;
+  }
+
+  #finalScreen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: #000000ee;
+    color: #e1d8d6;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+  }
+  #finalScreen.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #finalScreen button {
+    margin-top: 2rem;
+    font-size: 1.4rem;
+  }
+</style>
+</head>
+<body>
+<div id="gameContainer">
+  <div id="startScreen">
+    <h1>Bestiario:<br>La casa del tigre</h1>
+    <button id="startBtn">Jugar</button>
+  </div>
+
+  <div id="gameScreen">
+    <div id="topBar">
+      <button id="linternaBtn">Linterna: OFF</button>
+      <button id="musicBtn">Música: OFF</button>
+    </div>
+    <img id="sceneImage" src="" alt="Escena" />
+    <div id="desc"></div>
+    <div id="choices"></div>
+    <div id="inventory">Inventario: Ningún objeto</div>
+  </div>
+
+  <div id="finalScreen">
+    <div id="finalText"></div>
+    <button id="restartBtn">Volver a jugar</button>
+  </div>
+</div>
+
+<audio id="music" loop src="https://cdn.pixabay.com/download/audio/2022/03/02/audio_30b6be8ca2.mp3?filename=dark-music-background-ambient-1-13203.mp3"></audio>
+<audio id="tigerSound" src="https://cdn.pixabay.com/download/audio/2021/12/17/audio_110c4f2a35.mp3?filename=tiger-roar-6079.mp3"></audio>
+
+<script>
+(() => {
+  const startScreen = document.getElementById('startScreen');
+  const gameScreen = document.getElementById('gameScreen');
+  const finalScreen = document.getElementById('finalScreen');
+  const finalText = document.getElementById('finalText');
+  const restartBtn = document.getElementById('restartBtn');
+  const startBtn = document.getElementById('startBtn');
+  const linternaBtn = document.getElementById('linternaBtn');
+  const musicBtn = document.getElementById('musicBtn');
+  const sceneImage = document.getElementById('sceneImage');
+  const desc = document.getElementById('desc');
+  const choices = document.getElementById('choices');
+  const inventoryDiv = document.getElementById('inventory');
+  const music = document.getElementById('music');
+  const tigerSound = document.getElementById('tigerSound');
+
+  // Estado del juego
+  let linternaOn = false;
+  let musicOn = false;
+  let inventory = [];
+  let currentSceneId = 'entrada';
+  let tigerLocations = ['habitacion', 'altillo']; // lugares fijos del tigre
+  let tigerVisible = false;
+
+  // Datos de escenas
+  const scenes = {
+    entrada: {
+      img: 'https://i.ibb.co/rfNBR6z/entrada-casa-best.png',
+      desc: 'Estás frente a la entrada de la casa. La oscuridad es casi total. Podés entrar o alejarte.',
+      choices: [
+        { text: 'Entrar a la casa', next: 'pasillo' },
+        { text: 'Alejarte y rendirte', next: 'finalDerrota' }
+      ]
+    },
+    pasillo: {
+      img: 'https://i.ibb.co/JRSCJvD/pasillo-best.png',
+      desc: 'Un pasillo oscuro con flores marchitas y la sensación de que algo te observa. Podés ir a la cocina o a la habitación.',
+      choices: [
+        { text: 'Ir a la cocina', next: 'cocina' },
+        { text: 'Ir a la habitación', next: 'habitacion' },
+        { text: 'Salir de la casa', next: 'finalDerrota' }
+      ]
+    },
+    cocina: {
+      img: 'https://i.ibb.co/hM2GFrq/cocina [❶](code://python)
